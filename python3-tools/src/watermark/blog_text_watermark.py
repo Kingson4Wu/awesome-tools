@@ -3,7 +3,6 @@
 import os
 
 from text_watermark import text_watermark
-import cv2
 
 
 def watermark_recursive(folder_path):
