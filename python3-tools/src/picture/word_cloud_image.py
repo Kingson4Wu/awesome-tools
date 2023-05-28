@@ -2,6 +2,8 @@
 
 # https://zhuanlan.zhihu.com/p/353795160
 
+# pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple jieba
+
 import jieba
 import wordcloud
 # 读取文本
@@ -14,7 +16,7 @@ text = ' '.join(ls) # 连接成字符串
 
 stopwords = ["的","是","了"] # 去掉不需要显示的词
 
-wc = wordcloud.WordCloud(font_path="msyh.ttc",
+wc = wordcloud.WordCloud(font_path="msyh.ttf",
                          width = 1000,
                          height = 700,
                          background_color='white',
