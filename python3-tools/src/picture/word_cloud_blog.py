@@ -119,4 +119,4 @@ plt.axis("off")  # 不显示坐标轴
 plt.show()  # 显示图片
 
 # 保存到文件
-wc.to_file("/Users/kingsonwu/programming/github/kingson4wu.github.io/source/about/word_cloud.png")
+wc.to_file("/Users/kingsonwu/programming/github/kingson4wu.github.io/source/about/index/word_cloud.png")
