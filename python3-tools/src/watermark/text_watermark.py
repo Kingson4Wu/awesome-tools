@@ -23,6 +23,17 @@ def get_dominant_color(image):
 
 
 def text_watermark(img_src, dest, text, fontsize=7, alpha=0.5):
+    from PIL import Image
+
+    # 打开图像
+    image = Image.open(img_src)
+
+    # 检查图像的通道数
+    if image.mode != 'RGB':
+        # 转换为 RGB 模式
+        image = image.convert('RGB')
+        image.save(img_src)
+
     fig = plt.figure()
     # 读取图像
     img = plt.imread(img_src)
@@ -44,5 +55,5 @@ def text_watermark(img_src, dest, text, fontsize=7, alpha=0.5):
     plt.close(fig)  # 关闭图形窗口，释放内存
 
 
-for img in ['Haaland.jpeg', 'Haaland2.jpeg']:
-    text_watermark(img_src=img, dest='wm_%s' % img, text='@拉巴力不吃三文鱼')
+#for img in ['Haaland.jpeg', 'Haaland2.jpeg']:
+    #text_watermark(img_src=img, dest='wm_%s' % img, text='@拉巴力不吃三文鱼')
