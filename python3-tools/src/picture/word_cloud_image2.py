@@ -1,4 +1,6 @@
 
+# https://zhuanlan.zhihu.com/p/353795160
+
 # 示例代码
 from wordcloud import WordCloud
 from PIL import Image
@@ -14,7 +16,7 @@ with open("comments.txt",encoding="utf-8") as f:
 text = ' '.join(jieba.cut(s))
 
 # 生成对象
-img = Image.open('1685272628048.jpg') # 打开遮罩图片
+img = Image.open('1685275694886.jpg') # 打开遮罩图片
 mask = np.array(img) #将图片转换为数组
 
 stopwords = ["我","你","她","的","是","了","在","也","和","就","都","这"]
