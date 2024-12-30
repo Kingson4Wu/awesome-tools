@@ -44,6 +44,13 @@ def remove_chinese(text):
     result = re.sub(pattern, '', text)  # 替换中文字符为空字符串
     return result
 
+def remove_word(text):
+    words_to_remove = ["tag", "title", "tags"]  # 要去掉的单词列表
+    for word in words_to_remove:
+        pattern = re.compile(r'\b' + re.escape(word) + r'\b')  # 匹配指定单词的正则表达式
+        text = re.sub(pattern, '', text)  # 替换指定单词为空字符串
+    return text
+
 
 import re
 
@@ -87,6 +94,8 @@ merged_content = read_md_files(folder_path)
 merged_content = remove_chinese(merged_content)
 
 merged_content = remove_links_and_images(merged_content)
+
+merged_content = remove_word(merged_content)
 
 # 中文分词
 text = ' '.join(jieba.cut(merged_content))
