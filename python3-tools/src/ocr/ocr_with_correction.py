@@ -5,14 +5,18 @@ import pycorrector
 ocr = PaddleOCR(use_angle_cls=True, lang='ch')  # lang='ch' 支持中英文混排
 
 
+# 创建 Corrector 实例
+corrector = pycorrector.Corrector()
+
 def correct_text(text: str) -> str:
-    corrected, _ = pycorrector.correct(text)
+    corrected, _ = corrector.correct(text)
     return corrected
+
 
 
 def ocr_and_correct(image_path: str):
     # 执行 OCR 识别
-    results = ocr.ocr(image_path, cls=True)
+    results = ocr.predict(image_path)
 
     print("—— OCR 原始识别结果 ——")
     for line in results[0]:
@@ -25,9 +29,10 @@ def ocr_and_correct(image_path: str):
 
 
 if __name__ == "__main__":
-    image_file = "your_image.jpg"  # 替换为你的图片路径
+    image_file = "IMG_6835.PNG"  # 替换为你的图片路径
     ocr_and_correct(image_file)
 
-# pip install paddlepaddle -i https://pypi.tuna.tsinghua.edu.cn/simple
-# pip install paddlepaddle -i https://pypi.tuna.tsinghua.edu.cn/simple
+# pip install paddlepaddle
+# pip install paddleocr
 # pip install pycorrector
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
