@@ -1,0 +1,1 @@
++ conda deactivate (退出conda环境)

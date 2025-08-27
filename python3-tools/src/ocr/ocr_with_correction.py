@@ -36,3 +36,6 @@ if __name__ == "__main__":
 # pip install paddleocr
 # pip install pycorrector
 # pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+
+
+# 效果差！！！
