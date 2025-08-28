@@ -9,11 +9,12 @@ from datetime import datetime
 TMUX_SESSION = "qwen_session"
 WORKING_DIR = "/Users/kingsonwu/programming/ts-src/ts-playground"
 QWEN_COMMAND = "qwen --proxy http://localhost:7890 --yolo"
-POLL_INTERVAL = 10             # 轮询间隔（秒）
-INPUT_PROMPT_TIMEOUT = 3600    # 超过1小时没有输入提示，触发ESC逻辑
+POLL_INTERVAL = 10  # 轮询间隔（秒）
+INPUT_PROMPT_TIMEOUT = 3600  # 超过1小时没有输入提示，触发ESC逻辑
 
 LOG_FILE = "gemini_cli.log"
 LOG_TO_CONSOLE = True
+
 
 # -------------------------------
 # 日志函数
@@ -26,6 +27,7 @@ def log(message: str, to_console: bool = LOG_TO_CONSOLE):
     if to_console:
         print(formatted)
 
+
 # -------------------------------
 # tmux 辅助函数
 # -------------------------------
@@ -33,6 +35,7 @@ def tmux_session_exists(session: str) -> bool:
     result = subprocess.run(["tmux", "has-session", "-t", session],
                             capture_output=True, text=True)
     return result.returncode == 0
+
 
 def tmux_create_session(session: str):
     if not tmux_session_exists(session):
@@ -44,22 +47,32 @@ def tmux_create_session(session: str):
         tmux_send_keys(session, QWEN_COMMAND)
         time.sleep(5)  # 给 Qwen CLI 启动时间
 
+
 def tmux_send_keys(session: str, keys: str):
     log(f"[tmux] send: {keys}")
     # 1️⃣ 发文字内容
     subprocess.Popen(["tmux", "send-keys", "-t", session, keys])
     time.sleep(5)
     # 2️⃣ 单独发回车
-    #subprocess.Popen(["tmux", "send-keys", "-t", session, "Enter"])
+    # subprocess.Popen(["tmux", "send-keys", "-t", session, "Enter"])
     subprocess.run(["tmux", "send-keys", "-t", session, "C-m"])
+
 
 def tmux_send_enter(session: str):
     log("[tmux] send: Enter")
     subprocess.Popen(["tmux", "send-keys", "-t", session, "C-m"])
 
+
 def tmux_send_escape(session: str):
     log("[tmux] send: Escape")
     subprocess.Popen(["tmux", "send-keys", "-t", session, "Escape"])
+
+
+def tmux_send_backspace(session: str, count: int = 10):
+    print(f"[tmux] send: Backspace x{count}")
+    for _ in range(count):
+        subprocess.Popen(["tmux", "send-keys", "-t", session, "C-h"])
+
 
 def tmux_capture_output(session: str) -> str:
     result = subprocess.run(
@@ -67,6 +80,7 @@ def tmux_capture_output(session: str) -> str:
         capture_output=True, text=True
     )
     return result.stdout
+
 
 # -------------------------------
 # 检测输入提示
@@ -76,11 +90,13 @@ def is_input_prompt(output: str) -> bool:
         return False
     return bool(re.search(r">.*Type your message or @[\w/]+(?:\.\w+)?", output))
 
+
 def is_input_prompt_with_text(output: str) -> bool:
     if not output:
         return False
     # 使用非贪婪匹配，中间允许任意字符（不跨行）
     return bool(re.search(r"│ > .*? │", output))
+
 
 # -------------------------------
 # 规则系统
@@ -92,6 +108,7 @@ RULES = [
     {"check": lambda out: "API Error" in out, "command": None},  # 停止
 ]
 
+
 def next_command(output: str):
     for rule in RULES:
         try:
@@ -100,6 +117,7 @@ def next_command(output: str):
         except Exception as e:
             log(f"Rule check error: {e}")
     return "continue"
+
 
 # -------------------------------
 # 主循环
@@ -141,6 +159,18 @@ def main():
                 log("Input prompt timeout exceeded 1 hour, sending ESC and continue")
                 # 单独发送 ESC
                 tmux_send_escape(TMUX_SESSION)
+                time.sleep(5)
+
+                increase_num = 10
+                backspace_num = increase_num
+                tmux_send_backspace(TMUX_SESSION, backspace_num)
+                output = tmux_capture_output(TMUX_SESSION)
+                while not is_input_prompt(output):
+                    tmux_send_backspace(TMUX_SESSION, backspace_num)
+                    backspace_num = backspace_num + increase_num
+                    output = tmux_capture_output(TMUX_SESSION)
+                    time.sleep(2)
+
                 # 再发送 continue
                 tmux_send_keys(TMUX_SESSION, "continue")
                 last_input_prompt_time = time.time()
@@ -150,6 +180,7 @@ def main():
             time.sleep(POLL_INTERVAL)
 
     log("Automation finished.")
+
 
 # -------------------------------
 # 启动
