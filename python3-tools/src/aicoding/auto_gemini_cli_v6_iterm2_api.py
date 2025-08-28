@@ -99,7 +99,7 @@ class QwenAutomation:
         for window in app.windows:
             try:
                 # 获取窗口标题
-                window_title = await window.async_get_variable("title") or ""
+                window_title = await window.current_tab.current_session.async_get_variable("title")
                 logger.debug(f"Checking window title: '{window_title}'")
 
                 if TARGET_WINDOW_NAME in window_title:
@@ -191,9 +191,7 @@ class QwenAutomation:
 
         # 启动Qwen
         logger.info(f"Starting Qwen with command: {QWEN_COMMAND}")
-        await self.session.async_send_text(QWEN_COMMAND)
-        await asyncio.sleep(0.1)
-        await self.session.async_send_text("\n")
+        await self.session.async_send_text(QWEN_COMMAND+ "\n")
         await asyncio.sleep(8)  # 给更多时间让Qwen启动
 
         logger.info("Environment setup completed")
@@ -233,10 +231,7 @@ class QwenAutomation:
     async def send_command(self, command: str):
         """发送命令"""
         logger.info(f"Sending command: {command}")
-        await self.session.async_send_text(command)
-        await asyncio.sleep(0.1)  # 短暂等待
-        await self.session.async_send_text("\n")  # 明确发送回车
-        logger.debug("Command sent with newline")
+        await self.session.async_send_text(command+"\n")
 
     async def send_escape(self):
         """发送ESC键"""
