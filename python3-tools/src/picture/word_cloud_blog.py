@@ -45,7 +45,7 @@ def remove_chinese(text):
     return result
 
 def remove_word(text):
-    words_to_remove = ["tag", "title", "tags"]  # 要去掉的单词列表
+    words_to_remove = ["tag", "title", "tags", "java", "http", "return", "Reference", "int", "dp", "public", "num", "field", "range", "cnblogs", "map", "select", "set", "result", "update", "nums", "csdn.net", "func"]  # 要去掉的单词列表
     for word in words_to_remove:
         pattern = re.compile(r'\b' + re.escape(word) + r'\b')  # 匹配指定单词的正则表达式
         text = re.sub(pattern, '', text)  # 替换指定单词为空字符串
@@ -85,7 +85,7 @@ Another paragraph with a [link](https://example.com) and an ![image](image.jpg).
 
 
 # 指定文件夹路径
-folder_path = "/Users/kingsonwu/programming/github/kingson4wu.github.io/source/_posts"
+folder_path = "/Users/kingsonwu/programming/kingson4wu/kingson4wu.github.io/source/_posts"
 
 # 调用函数读取所有 Markdown 文件内容
 merged_content = read_md_files(folder_path)
@@ -101,7 +101,7 @@ merged_content = remove_word(merged_content)
 text = ' '.join(jieba.cut(merged_content))
 
 # 生成对象
-img = Image.open('1685275694886.jpg')  # 打开遮罩图片
+img = Image.open('7_47_12.png')  # 打开遮罩图片
 mask = np.array(img)  # 将图片转换为数组
 
 # 示例文件路径
@@ -116,8 +116,8 @@ stopwords.extend(['pre', 'status', 'type', 'len', 'TODO', 'String', 'class', 'us
 # stopwords = ["我","你","她","的","是","了","在","也","和","就","都","这", "可以", "如果", "中", "对", "我们", "需要", "时间", "自己", "一个", "问题", "使用", "工作", "会", "有", "而"]
 wc = WordCloud(font_path="msyh.ttf",
                mask=mask,
-               width=1000,
-               height=700,
+               width=1200,
+               height=900,
                background_color='white',
                max_words=200,
                stopwords=stopwords).generate(text)
@@ -128,4 +128,4 @@ plt.axis("off")  # 不显示坐标轴
 plt.show()  # 显示图片
 
 # 保存到文件
-wc.to_file("/Users/kingsonwu/programming/github/kingson4wu.github.io/source/about/index/word_cloud.png")
+wc.to_file("/Users/kingsonwu/programming/kingson4wu/kingson4wu.github.io/source/about/index/word_cloud.png")

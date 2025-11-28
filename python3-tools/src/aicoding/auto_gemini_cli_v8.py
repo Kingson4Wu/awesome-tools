@@ -161,7 +161,7 @@ RULES = [
     {"check": lambda out: "✕ [API Error: 400 <400> InternalError.Algo.InvalidParameter" in out, "command": "/clear"},
     {"check": lambda out: "✕ [API Error: terminated]" in out, "command": "continue"},  # continue
     {"check": lambda out: "API Error" in out, "command": "continue"},  # continue
-    {"check": lambda out: True, "command": task_prompt},
+    {"check": lambda out: True, "command": final_verification_prompt},
 ]
 
 
